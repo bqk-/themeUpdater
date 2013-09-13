@@ -1,0 +1,68 @@
+=== Project Name ===
+Contributors: stevecfischer
+Tags: content, developer
+
+== Description ==
+WFC WP Framework
+
+Overview
+WFC WP Framework
+
+== Installation ==
+
+Move these files into theme root-
+/scf-framework/theme_functions/style.css
+/scf-framework/theme_functions/functions.php
+/scf-framework/theme_functions/index.php
+
+== Frequently Asked Questions ==
+
+= Question number 1 =
+
+Awnser number 1
+
+== Changelog ==
+
+= 0.1 =
+* Intial Version.
+
+= 0.2 =
+* Added all default files a theme would need.
+
+= 0.4 =
+* Set CPTs for campaign space and subpage image pool to be created by default
+
+= 1.0 =
+* Fixed bugs with post type manager
+
+= 2.1 =
+* moved security functions to its only file
+* enhanced admin UI
+    i. with hovering and click posts lists items
+    ii. update and finish button on post edit pages
+* refactored definitions, file includes, and admin/global functions
+
+= 2.3 =
+* added wildcards to sidebars. so widgets will inherit their classes correctly
+
+= 3.0 =
+* beta enhancements:
+	i. Plugin Disclaimer
+	ii. WFC Client News Feed
+	iii. Site options
+		- Ability to enable/disable our core CPT’s.
+		- Custom CSS ( added for Ken )
+		- WFC Dashboard Widget
+		- MUST be logged in as developer.
+		- Currently it displays all pages that have no content.
+
+= 4.0 =
+Bug fixes
+
+= 5.1.0 =
+* Removed Core theme files. See Issue #1
+* Added Theme Builder
+    - dynamically create core theme files.
+
+= 5.1.1 =
+*
