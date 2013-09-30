@@ -134,7 +134,7 @@
             $_REQUEST = array_combine( explode( ',', $keys ), array_values( $_REQUEST ) );
             foreach( $theme_array as $page ){
                 if( $_REQUEST[$page['file']] ){
-                    $fp = fopen( WFC_PT.$page['file'], "w" );
+                    $fp = fopen( WFC_PT.'/../'.$page['file'], "w" );
                     fwrite( $fp, $page['content'] );
                     fclose( $fp );
                 }
@@ -146,7 +146,7 @@
             <form method="post">
                 <p class="choices">
                     Header.php :
-                    <input type="checkbox" name="header.php" disabled="disabled"/><br/> <!-- Required since we check if header.php exists to know if we need to build out the theme -->
+                    <input type="checkbox" name="header.php" checked="checked" disabled="disabled"/><br/> <!-- Required since we check if header.php exists to know if we need to build out the theme -->
                     Footer.php : <input type="checkbox" name="footer.php"/><br/>
                     Page.php : <input type="checkbox" name="page.php"/><br/>
                     Frontpage.php : <input type="checkbox" name="frontpage.php"/><br/>

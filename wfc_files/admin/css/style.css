@@ -73,3 +73,36 @@ start lightbox
 /* line 117, ../sass/lightbox.sass  */
 .lb-data .lb-close:hover{ cursor :pointer; }
 .lb-outerContainer:after, .lb-dataContainer:after{ content :""; display :table; clear :both; }
+#box_msg {
+			width:50%;
+			position:absolute;
+			left:50%;
+			top:50%;
+			margin-top:-10%;
+			margin-left:-25%;
+			z-index:9999;
+			background-color:orange;
+			border:1px solid red;
+			border-radius:3px;
+			padding:10px;
+		}
+		#background-update {
+			position:absolute;
+			top:0;
+			left:0;
+			width:100%;
+			height:100%;
+			z-index:9998;
+			background-color:black;
+			-moz-opacity: 0.8;
+		    opacity:.80;
+		    filter: alpha(opacity=80);
+		    cursor:pointer;
+		}
+		.close {
+			color:red;
+			float:right;
+			top:5px;
+			right:5px;
+			cursor:pointer;
+		}

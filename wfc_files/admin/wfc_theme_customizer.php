@@ -114,8 +114,7 @@
                         //print_r($value);
                         switch ($value['type']){
                         case "open":
-                            ?>
-                            <?php break;
+                            break;
                         case "close":
                     ?>
             </div>
@@ -220,7 +219,30 @@
                 </p>
             </form>
         </div>
-
+        <div id="theme_update">
+            This section will allow you to easly update your WFC Theme.<br />
+            <div class="rm_section">
+                <div class="rm_title"><h3>
+                    <img src="<?php echo WFC_ADM_IMG_URI; ?>/trans.png" class="inactive" alt="">Theme Update
+                </h3>
+                </span>
+                <div class="clearfix"></div>
+            </div>
+            <div class="rm_options">
+                <div class="rm_input">
+                    <?php
+                    wfc_callsLeft();
+                    $monitor=new Monitor();
+                    $monitor->StartTimer();
+                    echo wfc_manage_update();
+                    $monitor->StopTimer();
+                    echo '<br />';
+                    wfc_DisplayMonitor($monitor);
+                    wfc_print_api_limit();
+                    ?>
+                </div>
+            </div>
+        </div>
         <script>
             function wfc_confirm() {
                 if (confirm('Are You Sure?')) {
