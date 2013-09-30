@@ -131,7 +131,7 @@ function wfc_check_diffs() {
 				$old_files=array();
 				$current_files=array();
 				$path_to_old=WFC_PT.'../working_directory/'.$folder_name.'/wfc_files/';
-				$path_to_current=WFC_PT.'../wfc_files/';
+				$path_to_current=WFC_PT;
 				$old_nb_carac=strlen($path_to_old)+1;
 				$current_nb_carac=strlen($path_to_current)+1;
 				$old_files=listFolderFilesArr($path_to_old,array(),$old_nb_carac,$old_files);
@@ -218,6 +218,59 @@ function wfc_doUpdate() {
 
 			$path_to_current=WFC_PT.'../wfc_files/';
 						
+			$gr = new GRepo('bqk-');
+			$tags=$gr->getRepoTags();
+			$git=get_git_version();
+			$loc=get_local_version();
+			$exists=false;
+			$return='';
+			foreach($tags as $tag) if($tag->name==$git){
+				$return.='Found : '.$tag->zipball_url.'<br />';
+				$exists=true;
+				$target_url = $tag->zipball_url;  
+				$userAgent = 'Googlebot/2.1 (http://www.googlebot.com/bot.html)'; 
+				if(!file_exists(WFC_PT.'../working_directory'))
+					mkdir(WFC_PT.'../working_directory'); 
+				$file_zip = WFC_PT.'../working_directory/Ver_'.$tag->name.'.zip';  
+				//echo "<br>Starting<br>Target_url: $target_url";  
+				//echo "<br>Headers stripped out";  
+				// make the cURL request to $target_url  
+				$ch = curl_init();  
+				$fp = fopen($file_zip, "w+");  
+				curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);  
+				curl_setopt($ch, CURLOPT_URL,$target_url);  
+				curl_setopt($ch, CURLOPT_FAILONERROR, true);  
+				curl_setopt($ch, CURLOPT_HEADER,0);  
+				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);  
+				curl_setopt($ch, CURLOPT_AUTOREFERER, true);  
+				curl_setopt($ch, CURLOPT_BINARYTRANSFER,true);  
+				curl_setopt($ch, CURLOPT_TIMEOUT, 10);  
+				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);  
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);   
+				curl_setopt($ch, CURLOPT_FILE, $fp);  
+				$page = curl_exec($ch);  
+				if (!$page) {  
+				   $return.= "<br />cURL error number:" .curl_errno($ch);  
+				   $return.= "<br />cURL error:" . curl_error($ch);  
+				   return $return;  
+				}  
+				curl_close($ch);  
+				 //echo "<br />Downloaded file: $target_url";  
+				 // echo "<br />Saved as file: $file_zip";  
+				 // echo "<br />About to unzip ...";  
+				 // Un zip the file  
+				$zip = new ZipArchive;  
+				if (! $zip) {  
+				    $return.="<br>Could not make ZipArchive object.";  
+				    return $return; 
+				}  
+				if($zip->open("$file_zip") != "true") {  
+					$return.= "<br>Could not open $file_zip";  
+					return $return;
+				}  
+				$zip->extractTo(WFC_PT.'../working_directory/');  
+				$zip->close(); 
+			}
 			$folder_name='';
 			if ($handle = opendir(WFC_PT.'../working_directory')) {
 			    while (false !== ($entry = readdir($handle))) {
@@ -231,74 +284,22 @@ function wfc_doUpdate() {
 
 			if($folder_name!='') {
 				$path_to_old=WFC_PT.'../working_directory/'.$folder_name.'/wfc_files';
-				$gr = new GRepo('bqk-');
-				$tags=$gr->getRepoTags();
-				$git=get_git_version();
-				$loc=get_local_version();
-				$exists=false;
-				$return='';
-				foreach($tags as $tag) if($tag->name==$git){
-					$return.='Found : '.$tag->zipball_url.'<br />';
-					$exists=true;
-					$target_url = $tag->zipball_url;  
-					$userAgent = 'Googlebot/2.1 (http://www.googlebot.com/bot.html)'; 
-					if(!file_exists(WFC_PT.'../working_directory'))
-						mkdir(WFC_PT.'../working_directory'); 
-					$file_zip = WFC_PT.'../working_directory/Ver_'.$tag->name.'.zip';  
-					//echo "<br>Starting<br>Target_url: $target_url";  
-					//echo "<br>Headers stripped out";  
-					// make the cURL request to $target_url  
-					$ch = curl_init();  
-					$fp = fopen($file_zip, "w+");  
-					curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);  
-					curl_setopt($ch, CURLOPT_URL,$target_url);  
-					curl_setopt($ch, CURLOPT_FAILONERROR, true);  
-					curl_setopt($ch, CURLOPT_HEADER,0);  
-					curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);  
-					curl_setopt($ch, CURLOPT_AUTOREFERER, true);  
-					curl_setopt($ch, CURLOPT_BINARYTRANSFER,true);  
-					curl_setopt($ch, CURLOPT_TIMEOUT, 10);  
-					curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);  
-					curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);   
-					curl_setopt($ch, CURLOPT_FILE, $fp);  
-					$page = curl_exec($ch);  
-					if (!$page) {  
-					   $return.= "<br />cURL error number:" .curl_errno($ch);  
-					   $return.= "<br />cURL error:" . curl_error($ch);  
-					   return $return;  
-					}  
-					curl_close($ch);  
-					 //echo "<br />Downloaded file: $target_url";  
-					 // echo "<br />Saved as file: $file_zip";  
-					 // echo "<br />About to unzip ...";  
-					 // Un zip the file  
-					$zip = new ZipArchive;  
-					if (! $zip) {  
-					    $return.="<br>Could not make ZipArchive object.";  
-					    return $return; 
-					}  
-					if($zip->open("$file_zip") != "true") {  
-						$return.= "<br>Could not open $file_zip";  
-						return $return;
-					}  
-					$zip->extractTo(WFC_PT.'../working_directory/');  
-					$zip->close();  
-					//Time to delete all current files
-					rrmdir($path_to_current); //custom function, windows...
-					if(rename($path_to_old, $path_to_current)) {
-						//Do not forget to update version file !
-						unlink(WFC_PT.'../Ver_'.$loc.'.wfc');
-						$f=fopen(WFC_PT.'../Ver_'.$git.'.wfc','w+');
-						fwrite($f,'VERSION FILE - DO NOT DELETE');
-						fclose($f);
-						$result='WFC theme is now up-to-date !';
-						unset($zip);
-						@chmod(WFC_PT.'../working_directory', 0777);
-						rrmdir(WFC_PT.'../working_directory');
-					}
-					else
-						$result='Unable to replace old files.. Change permissions on wfc_files folder.';
+				//Time to delete all current files
+				rrmdir($path_to_current); //custom function, windows...
+				if(rename($path_to_old, $path_to_current)) {
+					//Do not forget to update version file !
+					unlink(WFC_PT.'../Ver_'.$loc.'.wfc');
+					$f=fopen(WFC_PT.'../Ver_'.$git.'.wfc','w+');
+					fwrite($f,'VERSION FILE - DO NOT DELETE');
+					fclose($f);
+					$result='WFC theme is now up-to-date !';
+					unset($zip);
+					@chmod(WFC_PT.'../working_directory', 0777);
+					@chmod(WFC_PT.'../working_directory/Ver_'.$git.'.zip', 0777);
+					rrmdir(WFC_PT.'../working_directory');
 				}
+				else
+					$result='Unable to replace old files.. Change permissions on wfc_files folder.';
 			}
 			else
 				$result='Unable to find the new files, make sure to make the diffs first !';
